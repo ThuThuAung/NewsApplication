@@ -8,9 +8,7 @@ import javax.inject.Inject
 class ApiHelperImpl @Inject constructor(
   private val newsApi: APIServices
 ) : ApiHelper {
-    override suspend fun getHeadlineNews(pageNumer: Int): Response<NewsResponse> {
-        TODO("Not yet implemented")
+    override suspend fun getHeadlineNews(pageNumer: Int): Response<NewsResponse> =
         newsApi.getTopHeadlineNews(Constants.CountryCode, pageNumer)
-    }
 
 }

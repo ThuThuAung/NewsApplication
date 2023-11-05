@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.criticaltechwork.newsapplication.di.CoroutinesDispatcherProvider
 import com.criticaltechwork.newsapplication.model.NewsResponse
 import com.criticaltechwork.newsapplication.network.repository.NewsRepository
+import com.criticaltechwork.newsapplication.utils.NetworkHelper
 import com.criticaltechwork.newsapplication.utils.NetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repository: NewsRepository,
-    private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider
+    private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider,
+    private val networkHelper: NetworkHelper
 ) : ViewModel() {
 
     private val _newsResponse = MutableStateFlow<NetworkState<NewsResponse>>(NetworkState.Empty())
@@ -33,6 +35,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun fetchNewsfromApi() {
+        if(networkHelper.isNetworkConnected()) {
             viewModelScope.launch(coroutinesDispatcherProvider.io) {
                 _newsResponse.value = NetworkState.Loading()
                 when( val response = repository.getHeadlineNews(pageCount)) {
@@ -48,6 +51,10 @@ class MainViewModel @Inject constructor(
                     else -> {}
                 }
             }
+        } else {
+            _errorMessage.value = "No internet available"
+        }
+
     }
 
     private fun handleNewsResponse(response: NetworkState<NewsResponse>): NetworkState<NewsResponse> {

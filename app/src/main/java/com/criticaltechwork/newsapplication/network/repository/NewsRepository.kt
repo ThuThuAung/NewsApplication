@@ -9,7 +9,6 @@ class NewsRepository @Inject constructor(
   private val remoteData : ApiHelper
 ) : INewsRespository {
     override suspend fun getHeadlineNews(pageCount: Int): NetworkState<NewsResponse> {
-        TODO("Not yet implemented")
         return try {
             val response = remoteData.getHeadlineNews(pageCount)
             val result = response.body()
