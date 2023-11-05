@@ -8,6 +8,7 @@ import com.criticaltechwork.newsapplication.network.repository.NewsRepository
 import com.criticaltechwork.newsapplication.utils.NetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,9 +19,14 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _newsResponse = MutableStateFlow<NetworkState<NewsResponse>>(NetworkState.Empty())
+    val newsResponse: StateFlow<NetworkState<NewsResponse>>
+        get() = _newsResponse
     var pageCount = 1;
+    var totalPage = 1;
     private var feedResponse: NewsResponse? = null
     private val _errorMessage = MutableStateFlow("")
+    val errorMessage: StateFlow<String>
+        get() = _errorMessage
 
     init {
         fetchNewsfromApi();
