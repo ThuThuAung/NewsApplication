@@ -3,6 +3,7 @@ package com.criticaltechwork.newsapplication.ui.details
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.view.MenuItem
 import com.bumptech.glide.Glide
 import com.criticaltechwork.newsapplication.R
 import com.criticaltechwork.newsapplication.base.BaseActivity
@@ -10,6 +11,7 @@ import com.criticaltechwork.newsapplication.databinding.ActivityDetailsBinding
 import com.criticaltechwork.newsapplication.model.Article
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
+
 
 @AndroidEntryPoint
 class DetailActivity : BaseActivity<ActivityDetailsBinding>() {
@@ -45,6 +47,16 @@ class DetailActivity : BaseActivity<ActivityDetailsBinding>() {
                 .into(binding.ivArticleImage)
         }
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 
