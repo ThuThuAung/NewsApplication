@@ -5,4 +5,5 @@
     <string name="description">description</string>
     <string name="source">CNN</string>
     <string name="published_at">2023-Nov-05</string>
+    <string name="content">Content</string>
 </resources>

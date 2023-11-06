@@ -1,5 +1,7 @@
 package com.criticaltechwork.newsapplication.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -7,10 +9,11 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.criticaltechwork.newsapplication.R
 import com.criticaltechwork.newsapplication.base.BaseActivity
 import com.criticaltechwork.newsapplication.databinding.ActivityMainBinding
+import com.criticaltechwork.newsapplication.model.Article
 import com.criticaltechwork.newsapplication.ui.adapter.RvNewsAdapter
+import com.criticaltechwork.newsapplication.ui.details.DetailActivity
 import com.criticaltechwork.newsapplication.utils.Constants.QUERY_PER_PAGE
 import com.criticaltechwork.newsapplication.utils.EndlessRecyclerOnScrollListener
 import com.criticaltechwork.newsapplication.utils.EspressoIdlingResource
@@ -26,9 +29,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onViewReady(savedInstanceState: Bundle?) {
         super.onViewReady(savedInstanceState)
         supportActionBar?.title = "Today's News"
-
-        savedInstanceState?.let {
-        }
         setupUI()
         setupRecyclerView()
         setupObservers()
@@ -67,11 +67,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             addOnScrollListener(onScrollListener)
         }
         rvNewsAdapter.setOnItemClickListener { news ->
-            val bundle = Bundle().apply {
-                putSerializable("news", news)
-            }
+
+            startActivity(launchNextScreen(applicationContext, news))
 
         }
+    }
+
+    fun launchNextScreen(context: Context, news: Article): Intent {
+        val bundle = Bundle().apply {
+            putSerializable("news", news)
+        }
+        val intent = Intent(context, DetailActivity::class.java)
+        intent.putExtras(bundle)
+        return intent
     }
 
     private fun setupObservers() {
