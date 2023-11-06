@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.criticaltechwork.newsapplication.BuildConfig
 import com.criticaltechwork.newsapplication.base.BaseActivity
 import com.criticaltechwork.newsapplication.databinding.ActivityMainBinding
 import com.criticaltechwork.newsapplication.model.Article
@@ -32,7 +33,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onViewReady(savedInstanceState: Bundle?) {
         super.onViewReady(savedInstanceState)
-        supportActionBar?.title = "Today's News"
+        supportActionBar?.title =  BuildConfig.COUNTRY_CODE.uppercase() + " Today's News"
         setupUI()
         setupRecyclerView()
         if (isBiometricSupported()) {

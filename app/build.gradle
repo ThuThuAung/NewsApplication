@@ -47,7 +47,7 @@ android {
             ]
         }
         pt {
-            applicationId "com.criticaltechwork.newsappUS"
+            applicationId "com.criticaltechwork.newsappPT"
             buildConfigField 'String', "COUNTRY_CODE", "\"pt\""
             manifestPlaceholders = [
                     appIcon: "@mipmap/pt"
