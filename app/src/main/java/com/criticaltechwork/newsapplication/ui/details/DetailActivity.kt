@@ -17,6 +17,7 @@ class DetailActivity : BaseActivity<ActivityDetailsBinding>() {
     override fun onViewReady(savedInstanceState: Bundle?) {
         super.onViewReady(savedInstanceState)
         supportActionBar?.title = "Details"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val article = getSerializable(this, "news", Article::class.java)
         setupUI(article)
 

@@ -79,4 +79,7 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:4.11.0"
 
     implementation "androidx.test.espresso:espresso-idling-resource:3.4.0"
+
+    //biomertic
+    implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
 }

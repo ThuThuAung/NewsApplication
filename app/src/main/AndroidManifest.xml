@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -15,6 +16,7 @@
         android:theme="@style/Theme.NewsApplication"
         tools:targetApi="31">
         <activity
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="sensor"
             android:name=".ui.main.MainActivity"
             android:exported="true">

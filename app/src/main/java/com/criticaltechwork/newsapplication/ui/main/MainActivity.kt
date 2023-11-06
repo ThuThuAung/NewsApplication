@@ -2,10 +2,14 @@ package com.criticaltechwork.newsapplication.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -26,18 +30,24 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     val mainViewModel: MainViewModel by viewModels()
     private lateinit var onScrollListener: EndlessRecyclerOnScrollListener
     private lateinit var rvNewsAdapter: RvNewsAdapter
+
     override fun onViewReady(savedInstanceState: Bundle?) {
         super.onViewReady(savedInstanceState)
         supportActionBar?.title = "Today's News"
         setupUI()
         setupRecyclerView()
-        setupObservers()
+        if (isBiometricSupported()) {
+            showBiometricPrompt()
+        } else {
+            showMessage("Biometric Not Supported!")
+            setupObservers()
+        }
     }
+
 
     override fun setBinding(): ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
 
-
-    fun setupUI() {
+    private fun setupUI() {
         EspressoIdlingResource.increment()
         binding.itemErrorMessage.btnRetry.setOnClickListener {
             mainViewModel.fetchNewsfromApi()
@@ -58,6 +68,52 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.swipeRefreshLayout.setOnRefreshListener(refreshListener)
     }
 
+    private fun isBiometricSupported(): Boolean {
+        val biometricManager = BiometricManager.from(this)
+        return when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                true
+            }
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE, BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE, BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                false
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    private fun showMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+    private fun showBiometricPrompt() {
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric Authentication")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Cancel")
+            .build()
+
+        val biometricPrompt = BiometricPrompt(this, ContextCompat.getMainExecutor(this),
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    showMessage("Authentication error: $errString")
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    showMessage("Authentication succeeded!")
+                    setupObservers()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    showMessage("Authentication failed.")
+                }
+            })
+
+        biometricPrompt.authenticate(promptInfo)
+    }
 
     private fun setupRecyclerView() {
         rvNewsAdapter = RvNewsAdapter()
@@ -73,7 +129,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    fun launchNextScreen(context: Context, news: Article): Intent {
+    private fun launchNextScreen(context: Context, news: Article): Intent {
         val bundle = Bundle().apply {
             putSerializable("news", news)
         }
