@@ -4,5 +4,5 @@ import com.criticaltechwork.newsapplication.model.NewsResponse
 import com.criticaltechwork.newsapplication.utils.NetworkState
 
 interface INewsRespository {
-    suspend fun getHeadlineNews(pageCount: Int) : NetworkState<NewsResponse>
+    suspend fun getHeadlineNews(country_code: String, pageCount: Int) : NetworkState<NewsResponse>
 }

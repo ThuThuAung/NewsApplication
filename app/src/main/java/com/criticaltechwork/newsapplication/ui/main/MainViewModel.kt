@@ -2,6 +2,7 @@ package com.criticaltechwork.newsapplication.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.criticaltechwork.newsapplication.BuildConfig
 import com.criticaltechwork.newsapplication.di.CoroutinesDispatcherProvider
 import com.criticaltechwork.newsapplication.model.NewsResponse
 import com.criticaltechwork.newsapplication.network.repository.NewsRepository
@@ -31,14 +32,14 @@ class MainViewModel @Inject constructor(
         get() = _errorMessage
 
     init {
-        fetchNewsfromApi();
+        fetchNewsfromApi()
     }
 
     fun fetchNewsfromApi() {
         if(networkHelper.isNetworkConnected()) {
             viewModelScope.launch(coroutinesDispatcherProvider.io) {
                 _newsResponse.value = NetworkState.Loading()
-                when( val response = repository.getHeadlineNews(pageCount)) {
+                when( val response = repository.getHeadlineNews(BuildConfig.COUNTRY_CODE, pageCount)) {
                     is NetworkState.Success -> {
                         _newsResponse.value = handleNewsResponse(response)
                     }

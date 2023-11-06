@@ -8,9 +8,9 @@ import javax.inject.Inject
 class NewsRepository @Inject constructor(
   private val remoteData : ApiHelper
 ) : INewsRespository {
-    override suspend fun getHeadlineNews(pageCount: Int): NetworkState<NewsResponse> {
+    override suspend fun getHeadlineNews(country_code: String, pageCount: Int): NetworkState<NewsResponse> {
         return try {
-            val response = remoteData.getHeadlineNews(pageCount)
+            val response = remoteData.getHeadlineNews(country_code, pageCount)
             val result = response.body()
             if (response.isSuccessful && result != null) {
                 NetworkState.Success(result)
